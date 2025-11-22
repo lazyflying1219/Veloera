@@ -116,15 +116,16 @@ type RelayInfo struct {
 
 // 定义支持流式选项的通道类型
 var streamSupportedChannels = map[int]bool{
-	common.ChannelTypeOpenAI:     true,
-	common.ChannelTypeAnthropic:  true,
-	common.ChannelTypeAws:        true,
-	common.ChannelTypeGemini:     true,
-	common.ChannelCloudflare:     true,
-	common.ChannelTypeAzure:      true,
-	common.ChannelTypeVolcEngine: true,
-	common.ChannelTypeOllama:     true,
-	common.ChannelTypeXai:        true,
+	common.ChannelTypeOpenAI:       true,
+	common.ChannelTypeAnthropic:    true,
+	common.ChannelTypeAws:          true,
+	common.ChannelTypeGemini:       true,
+	common.ChannelTypeVertexGemini: true,
+	common.ChannelCloudflare:       true,
+	common.ChannelTypeAzure:        true,
+	common.ChannelTypeVolcEngine:   true,
+	common.ChannelTypeOllama:       true,
+	common.ChannelTypeXai:          true,
 }
 
 func GenRelayInfoWs(c *gin.Context, ws *websocket.Conn) *RelayInfo {
