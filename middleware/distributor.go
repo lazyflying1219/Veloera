@@ -515,7 +515,7 @@ func SetupContextForSelectedChannel(c *gin.Context, channel *model.Channel, mode
 		c.Set("region", channel.Other)
 	case common.ChannelTypeXunfei:
 		c.Set("api_version", channel.Other)
-	case common.ChannelTypeGemini:
+	case common.ChannelTypeGemini, common.ChannelTypeVertexGemini:
 		c.Set("api_version", channel.Other)
 	case common.ChannelTypeAli:
 		c.Set("plugin", channel.Other)
