@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	neturl "net/url"
 	"veloera/common"
 	"veloera/dto"
 	"veloera/relay/channel"
@@ -103,20 +104,39 @@ func (a *Adaptor) GetRequestURL(info *relaycommon.RelayInfo) (string, error) {
 	}
 
 	if strings.HasPrefix(info.UpstreamModelName, "imagen") {
-		return fmt.Sprintf("%s/models/%s:predict", baseURL, info.UpstreamModelName), nil
+		urlStr := fmt.Sprintf("%s/models/%s:predict", baseURL, info.UpstreamModelName)
+		return appendVertexGeminiKey(urlStr, info), nil
 	}
 
 	if strings.HasPrefix(info.UpstreamModelName, "text-embedding") ||
 		strings.HasPrefix(info.UpstreamModelName, "embedding") ||
 		strings.HasPrefix(info.UpstreamModelName, "gemini-embedding") {
-		return fmt.Sprintf("%s/models/%s:embedContent", baseURL, info.UpstreamModelName), nil
+		urlStr := fmt.Sprintf("%s/models/%s:embedContent", baseURL, info.UpstreamModelName)
+		return appendVertexGeminiKey(urlStr, info), nil
 	}
 
 	action := "generateContent"
 	if info.IsStream {
 		action = "streamGenerateContent?alt=sse"
 	}
-	return fmt.Sprintf("%s/models/%s:%s", baseURL, info.UpstreamModelName, action), nil
+	urlStr := fmt.Sprintf("%s/models/%s:%s", baseURL, info.UpstreamModelName, action)
+	return appendVertexGeminiKey(urlStr, info), nil
+}
+
+// appendVertexGeminiKey 为 Vertex Gemini 渠道追加 ?key=API_KEY 查询参数，以兼容
+// https://aiplatform.googleapis.com/.../models/{model}:{action}?alt=sse&key=... 这种访问格式。
+func appendVertexGeminiKey(urlStr string, info *relaycommon.RelayInfo) string {
+	if info.ChannelType != common.ChannelTypeVertexGemini {
+		return urlStr
+	}
+	if info.ApiKey == "" {
+		return urlStr
+	}
+	sep := "?"
+	if strings.Contains(urlStr, "?") {
+		sep = "&"
+	}
+	return fmt.Sprintf("%s%vkey=%s", urlStr, sep, neturl.QueryEscape(info.ApiKey))
 }
 
 func (a *Adaptor) SetupRequestHeader(c *gin.Context, req *http.Header, info *relaycommon.RelayInfo) error {
