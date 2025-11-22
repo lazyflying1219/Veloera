@@ -75,6 +75,8 @@ func ChannelType2APIType(channelType int) (int, bool) {
 		apiType = APITypeTencent
 	case common.ChannelTypeGemini:
 		apiType = APITypeGemini
+	case common.ChannelTypeVertexGemini:
+		apiType = APITypeGemini
 	case common.ChannelTypeOllama:
 		apiType = APITypeOllama
 	case common.ChannelTypePerplexity:
