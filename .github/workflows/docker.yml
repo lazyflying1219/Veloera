@@ -30,7 +30,8 @@ jobs:
 
       - name: Save version info
         run: |
-          git describe --tags > VERSION
+          # 若缺少 tag，回退为当前提交短 SHA，避免直接失败
+          git describe --tags --always --dirty > VERSION
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
