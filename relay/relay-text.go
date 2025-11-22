@@ -309,6 +309,8 @@ func TextHelper(c *gin.Context) (openaiErr *dto.OpenAIErrorWithStatusCode) {
 			openaiErr, usage = openai.OpenaiPseudoStreamHandler(c, httpResp, relayInfo)
 		case common.ChannelTypeGemini:
 			openaiErr, usage = gemini.GeminiChatPseudoStreamHandler(c, httpResp, relayInfo)
+		case common.ChannelTypeVertexGemini:
+			openaiErr, usage = gemini.GeminiChatPseudoStreamHandler(c, httpResp, relayInfo)
 		default:
 			usage, openaiErr = adaptor.DoResponse(c, httpResp, relayInfo)
 		}
