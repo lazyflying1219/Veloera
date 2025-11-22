@@ -88,6 +88,11 @@ export const CHANNEL_OPTIONS = [
     label: 'Google Gemini',
   },
   {
+    value: 50,
+    color: 'orange',
+    label: 'Vertex Gemini',
+  },
+  {
     value: 11,
     color: 'orange',
     label: 'Google PaLM2',
