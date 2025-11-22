@@ -64,7 +64,7 @@ func ShouldDisableChannel(channelType int, err *dto.OpenAIErrorWithStatusCode) b
 	}
 	if err.StatusCode == http.StatusForbidden {
 		switch channelType {
-		case common.ChannelTypeGemini:
+		case common.ChannelTypeGemini, common.ChannelTypeVertexGemini:
 			return true
 		}
 	}

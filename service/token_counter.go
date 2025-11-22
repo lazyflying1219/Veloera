@@ -130,7 +130,10 @@ func getImageToken(info *relaycommon.RelayInfo, imageUrl *dto.MessageImageUrl, m
 	if !constant.GetMediaToken {
 		return 3 * baseTokens, nil
 	}
-	if info.ChannelType == common.ChannelTypeGemini || info.ChannelType == common.ChannelTypeVertexAi || info.ChannelType == common.ChannelTypeAnthropic {
+	if info.ChannelType == common.ChannelTypeGemini ||
+		info.ChannelType == common.ChannelTypeVertexGemini ||
+		info.ChannelType == common.ChannelTypeVertexAi ||
+		info.ChannelType == common.ChannelTypeAnthropic {
 		return 3 * baseTokens, nil
 	}
 	var config image.Config
