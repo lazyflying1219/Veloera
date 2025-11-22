@@ -95,23 +95,28 @@ func (a *Adaptor) GetRequestURL(info *relaycommon.RelayInfo) (string, error) {
 		}
 	}
 
-	version := model_setting.GetGeminiVersionSetting(info.UpstreamModelName)
+	baseURL := strings.TrimSuffix(info.BaseUrl, "/")
+	useVersion := info.ChannelType != common.ChannelTypeVertexGemini
+	if useVersion {
+		version := model_setting.GetGeminiVersionSetting(info.UpstreamModelName)
+		baseURL = fmt.Sprintf("%s/%s", baseURL, version)
+	}
 
 	if strings.HasPrefix(info.UpstreamModelName, "imagen") {
-		return fmt.Sprintf("%s/%s/models/%s:predict", info.BaseUrl, version, info.UpstreamModelName), nil
+		return fmt.Sprintf("%s/models/%s:predict", baseURL, info.UpstreamModelName), nil
 	}
 
 	if strings.HasPrefix(info.UpstreamModelName, "text-embedding") ||
 		strings.HasPrefix(info.UpstreamModelName, "embedding") ||
 		strings.HasPrefix(info.UpstreamModelName, "gemini-embedding") {
-		return fmt.Sprintf("%s/%s/models/%s:embedContent", info.BaseUrl, version, info.UpstreamModelName), nil
+		return fmt.Sprintf("%s/models/%s:embedContent", baseURL, info.UpstreamModelName), nil
 	}
 
 	action := "generateContent"
 	if info.IsStream {
 		action = "streamGenerateContent?alt=sse"
 	}
-	return fmt.Sprintf("%s/%s/models/%s:%s", info.BaseUrl, version, info.UpstreamModelName, action), nil
+	return fmt.Sprintf("%s/models/%s:%s", baseURL, info.UpstreamModelName, action), nil
 }
 
 func (a *Adaptor) SetupRequestHeader(c *gin.Context, req *http.Header, info *relaycommon.RelayInfo) error {
